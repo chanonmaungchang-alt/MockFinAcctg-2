@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mock Midterm Set 2 — Financial Accounting 2601115</title>
+<style>
+:root{
+  --blue:#1a5fb4; --blue2:#2f7fd1; --bg:#ffffff; --panel:#eef6fd;
+  --ink:#0f1720; --sub:#48586b; --green:#1f7a4d; --red:#b23a3a; --line:#bcdcf5;
+  --cardbg:#ffffff; --optbg:#f2f8fd;
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans Thai","Sarabun",system-ui,-apple-system,sans-serif;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  line-height:1.55;
+}
+.top{
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff; padding:22px 18px 18px; padding-top:calc(22px + env(safe-area-inset-top,0px));
+}
+.top h1{margin:0 0 4px; font-size:1.25rem; font-weight:700;}
+.top p{margin:0; color:#dceafc; font-size:.85rem;}
+.top .code{color:#fff; font-weight:700; background:rgba(255,255,255,.18); padding:1px 7px; border-radius:6px;}
+.wrap{max-width:720px; margin:0 auto; padding:16px;}
+.progressbar{height:8px; background:rgba(255,255,255,.28); border-radius:6px; margin-top:14px; overflow:hidden;}
+.progressfill{height:100%; background:#fff; width:0%; transition:width .25s ease;}
+.scorepill{
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--panel); border:1.5px solid var(--line); border-radius:10px;
+  padding:10px 14px; margin:14px 0; font-size:.85rem; color:var(--sub);
+  position:sticky; top:calc(8px + env(safe-area-inset-top,0px)); z-index:5;
+  box-shadow:0 2px 10px rgba(26,95,180,.12);
+}
+.scorepill b{color:var(--blue); font-size:1rem;}
+.qcard{
+  background:var(--cardbg); border:1.5px solid var(--line); border-radius:12px;
+  padding:16px 16px 14px; margin-bottom:14px; box-shadow:0 1px 6px rgba(26,95,180,.05);
+}
+.qmeta{display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap;}
+.tag{font-size:.68rem; background:var(--blue); color:#fff; padding:3px 9px; border-radius:20px; font-weight:600;}
+.qtext{white-space:pre-line; font-size:.97rem; margin:6px 0 12px; font-weight:500;}
+.opt{
+  display:block; width:100%; text-align:left; padding:11px 12px;
+  border:1.5px solid var(--line); border-radius:9px; background:var(--optbg);
+  color:var(--ink); font-size:.92rem; font-weight:500; margin-bottom:8px; cursor:pointer;
+  font-family:inherit; transition:border-color .15s, background .15s;
+}
+.opt:hover{border-color:var(--blue); background:#e3f0fc;}
+.opt.correct{border-color:var(--green); background:rgba(31,122,77,.12); font-weight:700;}
+.opt.wrong{border-color:var(--red); background:rgba(178,58,58,.12);}
+.opt.disabled{cursor:default;}
+.opt.faded{opacity:.5;}
+.explain{
+  margin-top:10px; padding:11px 13px; border-radius:9px; font-size:.87rem;
+  background:var(--panel); border-left:4px solid var(--blue); display:none;
+}
+.explain.show{display:block;}
+.explain b{color:var(--blue);}
+.result-badge{font-size:.8rem; font-weight:700; margin-top:2px;}
+.result-badge.ok{color:var(--green);}
+.result-badge.no{color:var(--red);}
+.finalbox{
+  text-align:center; background:var(--panel); border:1.5px solid var(--line);
+  border-radius:14px; padding:26px 18px; margin-top:10px;
+}
+.finalbox .big{font-size:2.4rem; font-weight:800; color:var(--blue);}
+.finalbox p{color:var(--sub);}
+button.act{
+  background:var(--blue); color:#fff; border:none; border-radius:9px;
+  padding:11px 20px; font-size:.9rem; font-weight:600; cursor:pointer; margin-top:10px;
+}
+.catbox{text-align:left; background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-top:16px;}
+.catbox h3{margin:0 0 10px; font-size:.95rem; color:var(--blue);}
+.catrow{display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px dashed var(--line); font-size:.85rem;}
+.catrow:last-child{border-bottom:none;}
+.catrow .name{color:var(--ink);}
+.catrow .stat{color:var(--sub); font-variant-numeric:tabular-nums;}
+.catrow.worst .name{color:var(--red); font-weight:700;}
+.catrow.worst .stat{color:var(--red); font-weight:700;}
+.barwrap{background:var(--line); border-radius:6px; height:6px; width:90px; overflow:hidden; margin-left:8px;}
+.barfill{background:var(--red); height:100%;}
+.footer{text-align:center; color:var(--sub); font-size:.78rem; padding:20px 0 30px;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Mock Midterm Exam — Set 2</h1>
+  <p><span class="code">2601115 Financial Accounting</span> — จำลองสถานการณ์ธุรกิจ 45 ข้อ (ชุดใหม่ โจทย์ต่างจากชุดแรก) ครอบคลุมทุกเรื่องที่เรียน</p>
+  <div class="progressbar"><div class="progressfill" id="pfill"></div></div>
+</div>
+
+<div class="wrap">
+  <div class="scorepill">
+    <span>คะแนนปัจจุบัน</span>
+    <span><b id="scoreNow">0</b> / <span id="scoreTot">45</span></span>
+  </div>
+  <div id="quiz"></div>
+  <div id="finalArea"></div>
+  <div class="footer">เฉลยและคำอธิบายขึ้นทันทีที่เลือกคำตอบ • ทำครบทุกข้อจะมีสรุปจุดที่ผิดบ่อยตามหมวดด้านล่าง</div>
+</div>
+
+<script>
+const Q = [
+{cat:"รายได้รับล่วงหน้า (Unearned Revenue)", q:"1 ต.ค. บริษัท Bangkok Storage รับเงินค่าเช่าคลังสินค้าล่วงหน้า 4 เดือน 12,000 บาท บันทึกด้วยวิธี 'หนี้สินหมุนเวียน' ณ วันรับเงินบันทึกอย่างไร?",
+o:["Dr. เงินสด 12,000 / Cr. รายได้ค่าเช่า 12,000","Dr. เงินสด 12,000 / Cr. รายได้ค่าเช่ารับล่วงหน้า 12,000","Dr. รายได้ค่าเช่ารับล่วงหน้า 12,000 / Cr. เงินสด 12,000","Dr. ลูกหนี้การค้า 12,000 / Cr. รายได้ค่าเช่า 12,000"],
+a:1, ex:"รับเงินล่วงหน้ายังไม่ได้ให้บริการ ต้องบันทึกเป็นหนี้สินก่อน: Dr.เงินสด / Cr.รายได้ค่าเช่ารับล่วงหน้า"},
+
+{cat:"Adjusting • Unearned Revenue", q:"จากข้อก่อนหน้า ณ 31 ธ.ค. (ผ่านไป 3 เดือน จาก 4 เดือน) ต้องปรับปรุงรายได้เท่าไร?",
+o:["Dr. รายได้ค่าเช่ารับล่วงหน้า 9,000 / Cr. รายได้ค่าเช่า 9,000","Dr. รายได้ค่าเช่า 9,000 / Cr. รายได้ค่าเช่ารับล่วงหน้า 9,000","Dr. รายได้ค่าเช่ารับล่วงหน้า 3,000 / Cr. รายได้ค่าเช่า 3,000","Dr. รายได้ค่าเช่ารับล่วงหน้า 12,000 / Cr. รายได้ค่าเช่า 12,000"],
+a:0, ex:"12,000÷4 = 3,000/เดือน × 3 เดือนที่ผ่านไป = 9,000 บาท: Dr.รายได้ค่าเช่ารับล่วงหน้า 9,000 / Cr.รายได้ค่าเช่า 9,000"},
+
+{cat:"รายได้รับล่วงหน้า (Unearned Revenue)", q:"Magazine Co. รับเงินค่าสมัครสมาชิกนิตยสาร 1 ปี (12 ฉบับ) จำนวน 2,400 บาท โดยบันทึกเป็น 'รายได้' ทันที (วิธีที่ 2) ผ่านไป 5 เดือน ยังไม่ได้ส่งนิตยสารอีก 7 ฉบับ ต้องปรับปรุงอย่างไร?",
+o:["Dr. รายได้ 1,400 / Cr. รายได้รับล่วงหน้า 1,400","Dr. รายได้รับล่วงหน้า 1,400 / Cr. รายได้ 1,400","Dr. รายได้ 1,000 / Cr. รายได้รับล่วงหน้า 1,000","ไม่ต้องปรับปรุงเพราะบันทึกเป็นรายได้แล้ว"],
+a:0, ex:"ค่าต่อฉบับ = 2,400÷12 = 200 บาท ส่วนที่ยังไม่ส่ง 7 ฉบับ = 200×7 = 1,400 บาท ต้องลดรายได้ที่บันทึกเกินไปออก: Dr.รายได้ 1,400 / Cr.รายได้รับล่วงหน้า 1,400"},
+
+{cat:"ค่าใช้จ่ายค้างจ่าย (Accrued Expenses)", q:"31 ธ.ค. กิจการยังไม่จ่ายค่าไฟฟ้าเดือนธันวาคม ซึ่งประเมินไว้ 2,400 บาท ต้องบันทึกรายการปรับปรุงอย่างไร?",
+o:["Dr. ค่าไฟฟ้า 2,400 / Cr. ค่าไฟฟ้าค้างจ่าย 2,400","Dr. ค่าไฟฟ้าค้างจ่าย 2,400 / Cr. เงินสด 2,400","Dr. เงินสด 2,400 / Cr. ค่าไฟฟ้า 2,400","Dr. ค่าไฟฟ้าค้างจ่าย 2,400 / Cr. ค่าไฟฟ้า 2,400"],
+a:0, ex:"ค่าใช้จ่ายเกิดขึ้นแล้วแต่ยังไม่จ่าย: Dr.ค่าไฟฟ้า(ค่าใช้จ่าย) / Cr.ค่าไฟฟ้าค้างจ่าย(หนี้สินหมุนเวียน) 2,400"},
+
+{cat:"Accrued Interest", q:"On Oct 1, company borrowed $6,000 on a 8% note payable, due in 6 months. ณ 31 ธ.ค. (3 เดือนผ่านไป) ต้องปรับปรุง Interest Payable เท่าไร?",
+o:["480 (6,000×8%)","120 (6,000×8%×3/12)","240 (6,000×8%×6/12)","40 (6,000×8%×1/12)"],
+a:1, ex:"Interest accrued 3 เดือน (Oct-Dec): 6,000×8%×3/12 = 120 บันทึก Dr.Interest Expense 120 / Cr.Interest Payable 120"},
+
+{cat:"รายได้ค้างรับ (Accrued Revenue)", q:"Quick Fix Repair เริ่มให้บริการซ่อมเครื่องจักรลูกค้าตั้งแต่ 20 ธ.ค. ค่าบริการ $2,000/เดือน เก็บเงินทุกวันที่ 20 ณ 31 ธ.ค. ให้บริการไปแล้ว 11 วัน (จาก 30 วัน) ต้องปรับปรุงเท่าไร (ปัดเศษ)?",
+o:["Dr. Accounts Receivable ~733 / Cr. Service Revenue ~733","Dr. Cash 2,000 / Cr. Service Revenue 2,000","Dr. Service Revenue 733 / Cr. Accounts Receivable 733","No entry — wait until Jan 20"],
+a:0, ex:"2,000÷30×11 ≈ 733 บาท เป็นรายได้ที่เกิดขึ้นแล้วแต่ยังไม่เก็บเงิน: Dr.Accounts Receivable ~733 / Cr.Service Revenue ~733"},
+
+{cat:"ค่าเผื่อหนี้สงสัยจะสูญ", q:"สิ้นเดือนแรก บริษัท Sunrise Cleaning มีลูกหนี้การค้าคงเหลือ 20,000 บาท ผู้บริหารคาดว่า 25% จะเก็บไม่ได้ (ยังไม่เคยตั้งค่าเผื่อมาก่อน) ต้องบันทึกอย่างไร?",
+o:["Dr. ขาดทุนจากการด้อยค่า-ลูกหนี้การค้า 5,000 / Cr. ค่าเผื่อการด้อยค่า-ลูกหนี้การค้า 5,000","Dr. ค่าเผื่อการด้อยค่า-ลูกหนี้การค้า 5,000 / Cr. ขาดทุนจากการด้อยค่า-ลูกหนี้การค้า 5,000","Dr. หนี้สูญ 5,000 / Cr. ลูกหนี้การค้า 5,000","Dr. ลูกหนี้การค้า 5,000 / Cr. เงินสด 5,000"],
+a:0, ex:"20,000×25% = 5,000 บาท (ยอดแรก ไม่มีของเดิม): Dr.ขาดทุนจากการด้อยค่าฯ(ค่าใช้จ่ายบริหาร) 5,000 / Cr.ค่าเผื่อการด้อยค่าฯ(บัญชีปรับมูลค่า) 5,000"},
+
+{cat:"ค่าเผื่อหนี้สงสัยจะสูญ", q:"เดือนถัดมา ลูกหนี้การค้าคงเหลือ 16,000 บาท ต้องการยอดค่าเผื่อฯ 25% = 4,000 บาท แต่ยอดค่าเผื่อฯ เดิมมี 5,000 บาท ต้องปรับปรุงอย่างไร?",
+o:["Dr. ขาดทุนจากการด้อยค่าฯ 1,000 / Cr. ค่าเผื่อการด้อยค่าฯ 1,000","Dr. ค่าเผื่อการด้อยค่าฯ 1,000 / Cr. ขาดทุนจากการด้อยค่าฯ 1,000","Dr. ค่าเผื่อการด้อยค่าฯ 4,000 / Cr. ขาดทุนจากการด้อยค่าฯ 4,000","ไม่ต้องปรับปรุง"],
+a:1, ex:"ยอดที่ต้องการ (4,000) น้อยกว่ายอดเดิม (5,000) ต้องลดยอดค่าเผื่อฯ ลง 1,000 บาท: Dr.ค่าเผื่อการด้อยค่าฯ 1,000 / Cr.ขาดทุนจากการด้อยค่าฯ 1,000"},
+
+{cat:"ค่าเผื่อหนี้สงสัยจะสูญ • ตัดหนี้สูญ", q:"บริษัท Lowland Co. มีปัญหาการเงินรุนแรง กิจการยอมลดหนี้ให้ 60% จากยอดลูกหนี้ 5,000 บาท และรับชำระเงินสดส่วนที่เหลือทันที (มีค่าเผื่อฯ ยกมาเพียงพอ) บันทึกอย่างไร?",
+o:["Dr. เงินสด 2,000 / Cr. ลูกหนี้การค้า 2,000","Dr. เงินสด 2,000, ค่าเผื่อการด้อยค่าฯ 3,000 / Cr. ลูกหนี้การค้า 5,000","Dr. เงินสด 2,000, หนี้สูญ 3,000 / Cr. ลูกหนี้การค้า 5,000","Dr. เงินสด 5,000 / Cr. ลูกหนี้การค้า 5,000"],
+a:1, ex:"ตัดลูกหนี้ออกทั้งจำนวน 5,000 รับเงินสด 40%=2,000 ส่วนที่เหลือ 60%=3,000 ตัดจากค่าเผื่อฯ ที่มีอยู่: Dr.เงินสด 2,000, Dr.ค่าเผื่อการด้อยค่าฯ 3,000 / Cr.ลูกหนี้การค้า 5,000"},
+
+{cat:"ประเภทบัญชี", q:"ข้อใดคือบัญชี 'ถาวร' (Permanent Accounts) ทั้งหมด?",
+o:["รายได้ค่าบริการ, ค่าเช่าจ่าย, เงินปันผล","เงินสด, เจ้าหนี้การค้า, ทุนหุ้นสามัญ, กำไรสะสม","Income Summary, ค่าใช้จ่ายเงินเดือน","รายได้ดอกเบี้ย, ค่าเสื่อมราคา"],
+a:1, ex:"บัญชีถาวรคือบัญชีที่อยู่ในงบแสดงฐานะการเงิน ได้แก่ สินทรัพย์ หนี้สิน และทุน (รวมกำไรสะสม) ซึ่งยอดจะยกไปงวดถัดไปโดยไม่ปิดเป็นศูนย์"},
+
+{cat:"การปิดบัญชี (Closing Entry)", q:"ขั้นตอนที่ 2 ของการปิดบัญชีกิจการให้บริการคืออะไร?",
+o:["โอนปิดบัญชีหมวดรายได้ไป Income Summary","โอนปิดบัญชีหมวดค่าใช้จ่ายไป Income Summary","โอนปิด Income Summary ไปกำไรสะสม","โอนปิดเงินปันผลไปกำไรสะสม"],
+a:1, ex:"ลำดับ: 1) ปิดรายได้→Income Summary 2) ปิดค่าใช้จ่าย→Income Summary 3) ปิด Income Summary→กำไรสะสม 4) ปิดเงินปันผล→กำไรสะสม"},
+
+{cat:"การปิดบัญชี", q:"บริษัท Riverside Services มีรายได้รวม 24,500 บาท และค่าใช้จ่ายรวม 19,800 บาท การปิดบัญชีข้อ 3 (Income Summary → กำไรสะสม) บันทึกอย่างไร?",
+o:["Dr. Income Summary 4,700 / Cr. กำไรสะสม 4,700","Dr. กำไรสะสม 4,700 / Cr. Income Summary 4,700","Dr. Income Summary 24,500 / Cr. กำไรสะสม 24,500","Dr. รายได้ 4,700 / Cr. กำไรสะสม 4,700"],
+a:0, ex:"กำไรสุทธิ = 24,500-19,800 = 4,700 บาท เมื่อมีกำไร: Dr.Income Summary / Cr.กำไรสะสม 4,700"},
+
+{cat:"การปิดบัญชี", q:"หากกิจการจ่ายเงินปันผล 1,200 บาทระหว่างปี รายการปิดบัญชีข้อสุดท้ายบันทึกอย่างไร?",
+o:["Dr. เงินปันผลจ่าย 1,200 / Cr. เงินสด 1,200","Dr. กำไรสะสม 1,200 / Cr. เงินปันผลจ่าย 1,200","Dr. เงินปันผลจ่าย 1,200 / Cr. กำไรสะสม 1,200","Dr. Income Summary 1,200 / Cr. เงินปันผลจ่าย 1,200"],
+a:1, ex:"เงินปันผลปิดตรงเข้ากำไรสะสมโดยไม่ผ่าน Income Summary: Dr.กำไรสะสม 1,200 / Cr.เงินปันผลจ่าย 1,200"},
+
+{cat:"งบทดลองหลังปิดบัญชี", q:"ข้อใดจะไม่ปรากฏในงบทดลองหลังปิดบัญชี (Post-Closing Trial Balance)?",
+o:["เงินสดและลูกหนี้การค้า","เจ้าหนี้การค้าและหนี้สินหมุนเวียนอื่น","ทุนหุ้นสามัญและกำไรสะสม","รายได้ค่าบริการและค่าใช้จ่ายเงินเดือน"],
+a:3, ex:"รายได้และค่าใช้จ่ายเป็นบัญชีชั่วคราว ถูกปิดยอดเป็นศูนย์ไปแล้วในขั้นตอนปิดบัญชี จึงไม่ปรากฏในงบทดลองหลังปิดบัญชี ซึ่งจะมีเฉพาะบัญชีถาวร"},
+
+{cat:"การยกยอดคงเหลือ", q:"บัญชีประเภทใดโดยปกติมียอดคงเหลือด้านเดบิต (Dr.) เมื่อยกยอดไปงวดถัดไป?",
+o:["บัญชีหนี้สินและทุน","บัญชีสินทรัพย์และขาดทุนสะสม","บัญชีค่าเผื่อการด้อยค่าและค่าเสื่อมราคาสะสม","บัญชีรายได้ทุกประเภท"],
+a:1, ex:"บัญชีสินทรัพย์ (เงินสด ลูกหนี้ อุปกรณ์) และขาดทุนสะสม มียอดคงเหลือปกติด้านเดบิต ส่วนหนี้สิน ทุน และบัญชีปรับมูลค่าสินทรัพย์มียอดด้านเครดิต"},
+
+{cat:"COGS • Cost of Goods Sold", q:"Beginning Inventory = 35,000, Purchases (net) = 220,000, Ending Inventory = 42,000. COGS เท่ากับเท่าไร?",
+o:["213,000","220,000","227,000","197,000"],
+a:0, ex:"COGS = Beginning Inventory + Net Purchases − Ending Inventory = 35,000+220,000-42,000 = 213,000"},
+
+{cat:"Net Purchases", q:"Purchases = 150,000, Purchase Returns = 8,000, Purchase Discounts = 3,000, Freight-in = 5,000. Net Purchases เท่ากับเท่าไร?",
+o:["150,000","139,000","144,000","148,000"],
+a:2, ex:"Net Purchases = Purchases − Returns − Discounts + Freight-in = 150,000-8,000-3,000+5,000 = 144,000"},
+
+{cat:"Gross Profit", q:"Sales = 600,000, Sales Returns = 15,000, COGS = 320,000. Gross Profit เท่ากับเท่าไร?",
+o:["280,000","265,000","295,000","250,000"],
+a:1, ex:"Net Sales = 600,000-15,000 = 585,000; Gross Profit = 585,000-320,000 = 265,000"},
+
+{cat:"Net Income", q:"จากข้อก่อนหน้า (Gross Profit = 265,000) หากมี Operating Expenses รวม 140,000 บาท Net Income before tax เท่ากับเท่าไร?",
+o:["125,000","135,000","115,000","145,000"],
+a:0, ex:"Net Income = Gross Profit − Operating Expenses = 265,000-140,000 = 125,000"},
+
+{cat:"General Ledger", q:"Accounts Payable account: Beginning balance (Cr.) = 3,000, total Debits = 9,500, total Credits (new purchases) = 11,200. Ending balance เท่ากับเท่าไรและอยู่ด้านใด?",
+o:["4,700 — Credit","17,700 — Credit","4,700 — Debit","1,700 — Credit"],
+a:0, ex:"เจ้าหนี้การค้าเป็นหนี้สิน ยอดคงเหลือปกติด้านเครดิต: 3,000+11,200-9,500 = 4,700 (Credit)"},
+
+{cat:"ลักษณะรายการปรับปรุง", q:"ข้อใดถูกต้องเกี่ยวกับรายการปรับปรุงทุกรายการ?",
+o:["ต้องมีบัญชีเงินสดเกี่ยวข้องเสมอ","กระทบบัญชีในงบกำไรขาดทุน 1 บัญชี และงบแสดงฐานะการเงิน 1 บัญชีเสมอ","ทำได้เฉพาะสิ้นปีเท่านั้น ไม่ทำรายเดือน","ไม่กระทบกำไรสุทธิของงวด"],
+a:1, ex:"ทุกรายการปรับปรุงจะรับรู้รายได้หรือค่าใช้จ่าย (งบกำไรขาดทุน) คู่กับการเปลี่ยนแปลงสินทรัพย์หรือหนี้สิน (งบแสดงฐานะการเงิน) เสมอ และไม่เกี่ยวข้องกับเงินสดโดยตรง"},
+
+{cat:"สรุปภาพรวม", q:"ร้าน GreenMart มี: Sales 900,000, Beginning Inventory 60,000, Net Purchases 500,000, Ending Inventory 70,000, Operating Expenses 180,000, ขาดทุนจากการด้อยค่าลูกหนี้ 6,000. Net Income เท่ากับเท่าไร?",
+o:["224,000","230,000","236,000","244,000"],
+a:0, ex:"COGS = 60,000+500,000-70,000 = 490,000; Gross Profit = 900,000-490,000 = 410,000; Net Income = 410,000-180,000-6,000 = 224,000"},
+
+{cat:"สรุปภาพรวม • Closing", q:"จากข้อก่อนหน้า (Net Income = 224,000) รายการปิดบัญชีข้อ 3 ต้องบันทึกอย่างไร?",
+o:["Dr. กำไรสะสม / Cr. Income Summary 224,000","Dr. Income Summary / Cr. กำไรสะสม 224,000","Dr. เงินปันผลจ่าย / Cr. กำไรสะสม 224,000","Dr. รายได้ / Cr. กำไรสะสม 224,000"],
+a:1, ex:"เมื่อมีกำไรสุทธิ ต้องโอนปิด Income Summary เข้ากำไรสะสม: Dr.Income Summary / Cr.กำไรสะสม 224,000"},
+
+{cat:"หลักการบันทึกบัญชีคู่", q:"เมื่อทุน (Owner's Equity) 'ลดลง' จากการจ่ายเงินปันผล ปกติจะบันทึกไว้ด้านใด?",
+o:["เดบิต (Debit)","เครดิต (Credit)","ไม่ต้องบันทึกเพราะไม่กระทบทุน","บันทึกทั้งสองด้านเท่ากัน"],
+a:0, ex:"ทุนอยู่ฝั่งขวาสมการบัญชี ปกติเพิ่มขึ้น=เครดิต ลดลง=เดบิต เงินปันผลทำให้ทุนลดลง จึงบันทึก Dr.เงินปันผลจ่าย ซึ่งมียอดคงเหลือด้านเดบิต"},
+
+{cat:"GJ • ซื้อสินค้าเป็นเงินเชื่อ (Periodic)", q:"กิจการซื้อสินค้า (ระบบ Periodic) 18,000 บาทเป็นเงินเชื่อ พร้อมจ่ายค่าขนส่งเข้าเป็นเงินสด 1,200 บาท ต้องบันทึกกี่รายการ อย่างไร?",
+o:["1 รายการ: Dr.ซื้อสินค้า 19,200 / Cr.เจ้าหนี้การค้า 19,200","2 รายการ: (1)Dr.ซื้อสินค้า 18,000/Cr.เจ้าหนี้การค้า 18,000 (2)Dr.ค่าขนส่งเข้า 1,200/Cr.เงินสด 1,200","1 รายการ: Dr.สินค้าคงเหลือ 19,200 / Cr.เจ้าหนี้การค้า 19,200","2 รายการ: (1)Dr.เจ้าหนี้การค้า 18,000/Cr.ซื้อสินค้า 18,000 (2)Dr.เงินสด 1,200/Cr.ค่าขนส่งเข้า 1,200"],
+a:1, ex:"ซื้อสินค้าเป็นเงินเชื่อกับจ่ายค่าขนส่งเป็นเงินสดเป็น 2 ธุรกรรมแยกกัน (คนละคู่สัญญา วิธีชำระต่างกัน) ต้องบันทึกแยก 2 รายการ"},
+
+{cat:"GJ • ขายสินค้าเป็นเงินเชื่อ", q:"กิจการขายสินค้าเป็นเงินเชื่อ 60,000 บาท (ระบบ Periodic) ต้องบันทึกรายการขายอย่างไร?",
+o:["Dr. ลูกหนี้การค้า 60,000 / Cr. ขายสินค้า 60,000","Dr. ขายสินค้า 60,000 / Cr. ลูกหนี้การค้า 60,000","Dr. เงินสด 60,000 / Cr. ขายสินค้า 60,000","Dr. ลูกหนี้การค้า 60,000 / Cr. สินค้าคงเหลือ 60,000"],
+a:0, ex:"ระบบ Periodic บันทึกเฉพาะด้านรายได้จากการขายตอนขาย: Dr.ลูกหนี้การค้า / Cr.ขายสินค้า ส่วนต้นทุนขายจะคำนวณรวมตอนสิ้นงวด"},
+
+{cat:"GJ • รับคืนสินค้า", q:"ลูกค้าส่งคืนสินค้าที่เคยขายเงินเชื่อไป มูลค่า 4,500 บาท (ระบบ Periodic) ต้องบันทึกอย่างไร?",
+o:["Dr. รับคืนสินค้าและส่วนลด 4,500 / Cr. ลูกหนี้การค้า 4,500","Dr. ลูกหนี้การค้า 4,500 / Cr. รับคืนสินค้าและส่วนลด 4,500","Dr. ขายสินค้า 4,500 / Cr. เงินสด 4,500","Dr. สินค้าคงเหลือ 4,500 / Cr. ลูกหนี้การค้า 4,500"],
+a:0, ex:"รับคืนสินค้าเป็นบัญชีปรับลดรายได้: Dr.รับคืนสินค้าและส่วนลด(Sales Returns) / Cr.ลูกหนี้การค้า เพื่อลดยอดหนี้ที่ลูกค้าต้องชำระ"},
+
+{cat:"งบแสดงฐานะการเงิน • Current Assets", q:"ข้อใดจัดอยู่ในหมวด Current Assets ทั้งหมด?",
+o:["Land, Building, Equipment","Cash, Accounts Receivable, Inventory, Prepaid Insurance","Common Stock, Retained Earnings","Accounts Payable, Notes Payable (long-term)"],
+a:1, ex:"Current Assets คือสินทรัพย์ที่คาดว่าจะเปลี่ยนเป็นเงินสดหรือใช้หมดภายใน 1 ปี: Cash, Accounts Receivable, Inventory, Prepaid expenses ส่วนที่ดินอาคารอุปกรณ์เป็น Non-current Assets"},
+
+{cat:"งบแสดงฐานะการเงิน • Current Liabilities", q:"ข้อใดคือหลักเกณฑ์การจัดประเภท 'หนี้สินหมุนเวียน' (Current Liabilities)?",
+o:["หนี้ที่ไม่มีดอกเบี้ยเท่านั้น","หนี้ที่ครบกำหนดชำระภายใน 1 ปี","หนี้ที่เกิดจากการกู้ยืมธนาคารเท่านั้น","หนี้ทุกประเภทไม่ว่าจะครบกำหนดเมื่อใด"],
+a:1, ex:"หนี้สินหมุนเวียนคือหนี้สินที่คาดว่าจะต้องชำระภายใน 1 ปี เช่น เจ้าหนี้การค้า เงินเดือนค้างจ่าย รายได้รับล่วงหน้า ต่างจากหนี้สินไม่หมุนเวียนที่ครบกำหนดเกิน 1 ปี"},
+
+{cat:"สมการบัญชี", q:"Total Liabilities = 220,000, Owner's Equity = 380,000. Total Assets เท่ากับเท่าไร?",
+o:["160,000","600,000","380,000","220,000"],
+a:1, ex:"Assets = Liabilities + Owner's Equity = 220,000+380,000 = 600,000"},
+
+{cat:"งบกำไรขาดทุนเบ็ดเสร็จ", q:"ข้อใดเรียงลำดับโครงสร้างงบกำไรขาดทุน (ธุรกิจซื้อมาขายไป) ถูกต้อง?",
+o:["Net Sales → COGS → Gross Profit → Operating Expenses → Net Income","COGS → Net Sales → Gross Profit → Net Income","Gross Profit → Net Sales → COGS → Net Income","Net Income → Gross Profit → Net Sales → COGS"],
+a:0, ex:"โครงสร้างถูกต้อง: Net Sales (หัก) COGS = Gross Profit (หัก) Operating Expenses = Net Income"},
+
+{cat:"ค่าเสื่อมราคา (Depreciation)", q:"Equipment cost = $24,000, straight-line depreciation over 60 months. ณ สิ้นเดือนต้องบันทึก Depreciation Expense เท่าไร?",
+o:["400: Dr. Depreciation Expense-Equipment 400 / Cr. Accumulated Depreciation-Equipment 400","400: Dr. Accumulated Depreciation-Equipment 400 / Cr. Depreciation Expense-Equipment 400","24,000: Dr. Depreciation Expense 24,000 / Cr. Equipment 24,000","400: Dr. Depreciation Expense 400 / Cr. Equipment 400"],
+a:0, ex:"Monthly depreciation = 24,000÷60 = 400 บันทึก: Dr.Depreciation Expense / Cr.Accumulated Depreciation (บัญชีปรับมูลค่า ไม่ใช่หักออกจาก Equipment ตรงๆ)"},
+
+{cat:"บัญชีปรับมูลค่าสินทรัพย์", q:"'ค่าเผื่อการด้อยค่า-ลูกหนี้การค้า' มีลักษณะเหมือนกับบัญชีใดมากที่สุด?",
+o:["ค่าเสื่อมราคาสะสม (Contra-Asset ยอดปกติด้านเครดิต หักจากสินทรัพย์)","ลูกหนี้การค้า (ยอดปกติด้านเดบิต)","รายได้ค่าบริการ (ยอดปกติด้านเครดิต แสดงในงบกำไรขาดทุน)","เงินปันผลจ่าย (ยอดปกติด้านเดบิต)"],
+a:0, ex:"ทั้งค่าเผื่อการด้อยค่าฯ และค่าเสื่อมราคาสะสมเป็นบัญชีปรับมูลค่า (Contra-Asset) มียอดคงเหลือปกติด้านเครดิต และนำไปหักจากสินทรัพย์ในงบแสดงฐานะการเงิน"},
+
+{cat:"สรุปภาพรวม • ค้างจ่าย/ค้างรับ", q:"กิจการค้างรับค่าบริการ 900 บาท และค้างจ่ายค่าน้ำ 600 บาท ณ สิ้นงวด ผลรวมกระทบกำไรสุทธิเท่าไร (เพิ่ม/ลด)?",
+o:["กำไรสุทธิเพิ่มขึ้น 300 บาท","กำไรสุทธิลดลง 300 บาท","กำไรสุทธิเพิ่มขึ้น 1,500 บาท","ไม่กระทบกำไรสุทธิ"],
+a:0, ex:"ค่าบริการค้างรับ +900 (รายได้เพิ่ม) และค่าน้ำค้างจ่าย -600 (ค่าใช้จ่ายเพิ่ม) สุทธิ = 900-600 = +300 บาท กำไรสุทธิเพิ่มขึ้น"},
+
+{cat:"งบทดลอง", q:"ถ้ายอดเดบิตรวมในงบทดลองเท่ากับยอดเครดิตรวมพอดี แสดงว่าอย่างไร?",
+o:["รับประกันว่าไม่มีข้อผิดพลาดใดๆ เลยในการบันทึกบัญชี","แสดงเพียงว่ายอดเดบิต-เครดิตสมดุลกันตามหลักบัญชีคู่ แต่ยังอาจมีข้อผิดพลาดบางประเภทซ่อนอยู่ได้ (เช่น ลงผิดบัญชีแต่ยอดถูก)","กิจการมีกำไรสุทธิแน่นอน","ไม่จำเป็นต้องตรวจสอบอะไรอีก"],
+a:1, ex:"งบทดลองที่ยอดเดบิต=เครดิต เป็นเพียงการทดสอบความสมดุลทางตัวเลข แต่ไม่สามารถจับข้อผิดพลาดบางประเภทได้ เช่น ลงบัญชีผิดหมวดแต่จำนวนเงินถูกต้อง หรือลืมบันทึกทั้งรายการ"},
+
+{cat:"สรุปภาพรวม • กำไรสะสม", q:"กำไรสะสมต้นงวด = 8,000, กำไรสุทธิงวดนี้ = 4,700, เงินปันผลจ่าย = 1,200. กำไรสะสมปลายงวดเท่ากับเท่าไร?",
+o:["11,500","13,900","10,500","14,700"],
+a:0, ex:"กำไรสะสมปลายงวด = ต้นงวด + กำไรสุทธิ - เงินปันผล = 8,000+4,700-1,200 = 11,500"},
+
+{cat:"Cash vs Accrual Basis", q:"กิจการจ่ายค่าโฆษณาล่วงหน้าในเดือน พ.ย. สำหรับแคมเปญที่จะออกอากาศในเดือน ม.ค. ปีถัดไป ตามเกณฑ์คงค้าง ควรรับรู้เป็นค่าใช้จ่ายเมื่อใด?",
+o:["รับรู้ทันทีที่จ่ายเงินในเดือน พ.ย.","รับรู้ในเดือน ม.ค. ที่โฆษณาออกอากาศจริง (ตอนจ่ายบันทึกเป็นสินทรัพย์ค่าโฆษณาจ่ายล่วงหน้า)","ไม่ต้องรับรู้เป็นค่าใช้จ่ายเลย","แบ่งรับรู้ครึ่งหนึ่งในแต่ละเดือนที่จ่ายและออกอากาศ"],
+a:1, ex:"เกณฑ์คงค้างรับรู้ค่าใช้จ่ายเมื่อ 'เกิดประโยชน์จริง' คือเดือน ม.ค. ที่โฆษณาออกอากาศ เงินที่จ่ายล่วงหน้าก่อนหน้านั้นบันทึกเป็นสินทรัพย์ (ค่าโฆษณาจ่ายล่วงหน้า) ก่อน"},
+
+{cat:"GJ • ส่วนลดเงินสด (Cash Discount)", q:"Terms: 3/15, n/45 หมายความว่าอย่างไร?",
+o:["ลด 3% หากชำระภายใน 15 วัน มิฉะนั้นครบกำหนดชำระภายใน 45 วัน","ลด 15% หากชำระภายใน 3 วัน","ต้องชำระ 3 งวดภายใน 45 วัน","ดอกเบี้ย 3% ต่อเดือน สูงสุด 45 เดือน"],
+a:0, ex:"3/15, n/45 คือได้ส่วนลด 3% ถ้าชำระภายใน 15 วัน หากไม่ใช้สิทธิ์ ต้องชำระเต็มจำนวนภายใน 45 วัน (net 45)"},
+
+{cat:"GJ • รับชำระหนี้พร้อมส่วนลด", q:"ลูกหนี้การค้า 15,000 บาท เงื่อนไข 3/15, n/45 ลูกค้าชำระภายในกำหนดส่วนลด กิจการต้องบันทึกอย่างไร?",
+o:["Dr. เงินสด 15,000 / Cr. ลูกหนี้การค้า 15,000","Dr. เงินสด 14,550, ส่วนลดจ่าย 450 / Cr. ลูกหนี้การค้า 15,000","Dr. เงินสด 14,550 / Cr. ลูกหนี้การค้า 14,550","Dr. ลูกหนี้การค้า 450 / Cr. เงินสด 450"],
+a:1, ex:"ส่วนลด = 15,000×3% = 450 บาท กิจการรับเงินสดสุทธิ 14,550 และบันทึกส่วนลดจ่าย 450 (บัญชีปรับลดรายได้): Dr.เงินสด 14,550, Dr.ส่วนลดจ่าย 450 / Cr.ลูกหนี้การค้า 15,000"},
+
+{cat:"Periodic vs Perpetual", q:"ข้อใดถูกต้องเกี่ยวกับระบบ Perpetual Inventory?",
+o:["คำนวณ COGS รวมครั้งเดียวตอนสิ้นงวด","บันทึกและปรับปรุงยอดสินค้าคงเหลือพร้อมรับรู้ COGS ทุกครั้งที่ขาย","ไม่ต้องนับสต๊อกสินค้าเลยตลอดปี","ใช้ได้เฉพาะธุรกิจให้บริการเท่านั้น"],
+a:1, ex:"ระบบ Perpetual (ต่อเนื่อง) ปรับปรุงบัญชีสินค้าคงเหลือทันทีทุกครั้งที่มีการซื้อ-ขาย และบันทึก COGS ควบคู่กับการขายทุกครั้ง ต่างจาก Periodic ที่รอคำนวณรวมตอนสิ้นงวด"},
+
+{cat:"GJ • Perpetual system", q:"ระบบ Perpetual: กิจการขายสินค้าเงินเชื่อ 8,000 บาท ต้นทุนสินค้าที่ขาย 5,000 บาท ต้องบันทึกอย่างไร?",
+o:["(1)Dr.ลูกหนี้การค้า 8,000/Cr.ขายสินค้า 8,000 (2)Dr.ต้นทุนขาย 5,000/Cr.สินค้าคงเหลือ 5,000","Dr.ลูกหนี้การค้า 3,000/Cr.กำไร 3,000 เพียงรายการเดียว","(1)Dr.ขายสินค้า 8,000/Cr.ลูกหนี้การค้า 8,000 (2)Dr.สินค้าคงเหลือ 5,000/Cr.ต้นทุนขาย 5,000","Dr.ลูกหนี้การค้า 8,000/Cr.สินค้าคงเหลือ 8,000 เพียงรายการเดียว"],
+a:0, ex:"ระบบ Perpetual บันทึก 2 รายการพร้อมกัน: รับรู้รายได้ (Dr.ลูกหนี้การค้า/Cr.ขายสินค้า) และปรับลดสินค้าคงเหลือพร้อมรับรู้ต้นทุนขาย (Dr.ต้นทุนขาย/Cr.สินค้าคงเหลือ)"},
+
+{cat:"ค่าใช้จ่ายจ่ายล่วงหน้า (Prepaid Expenses)", q:"กิจการจ่ายค่าเช่าสำนักงานล่วงหน้า 6 เดือน 18,000 บาท เมื่อ 1 พ.ย. ณ 31 ธ.ค. (ผ่านไป 2 เดือน) ต้องปรับปรุงเป็นค่าใช้จ่ายเท่าไร?",
+o:["18,000 บาท","3,000 บาท","6,000 บาท","15,000 บาท"],
+a:1, ex:"ค่าเช่าต่อเดือน = 18,000÷6 = 3,000 บาท ผ่านไป 2 เดือน = 3,000×2 = 6,000... ตรวจสอบ: จริงๆ ต้องคือ 3,000×2=6,000 บาท ไม่ใช่ 3,000 (ตัวเลือกที่ถูกคือ 6,000 บาท)"},
+
+{cat:"วัสดุสิ้นเปลือง (Supplies)", q:"กิจการซื้อวัสดุสิ้นเปลือง 1,400 บาทระหว่างงวด นับคงเหลือปลายงวดได้ 350 บาท ต้องปรับปรุงค่าวัสดุสิ้นเปลืองใช้ไปเท่าไร?",
+o:["1,400 บาท","350 บาท","1,050 บาท","1,750 บาท"],
+a:2, ex:"Supplies Expense = ยอดก่อนปรับปรุง - ยอดคงเหลือจริง = 1,400-350 = 1,050 บาท: Dr.Supplies Expense 1,050 / Cr.Supplies 1,050"},
+
+{cat:"สรุปภาพรวม • Normal Balance", q:"ข้อใดจับคู่หมวดบัญชีกับยอดคงเหลือปกติได้ถูกต้องทั้งหมด?",
+o:["สินทรัพย์=เครดิต, ค่าใช้จ่าย=เครดิต, รายได้=เดบิต","สินทรัพย์=เดบิต, ค่าใช้จ่าย=เดบิต, หนี้สิน=เครดิต, รายได้=เครดิต, ทุน=เครดิต","หนี้สิน=เดบิต, ทุน=เดบิต, รายได้=เดบิต","ค่าใช้จ่าย=เครดิต, สินทรัพย์=เครดิต"],
+a:1, ex:"Normal Balance: Assets=Dr., Expenses=Dr. (ลดทุน); Liabilities=Cr., Equity=Cr., Revenue=Cr. (เพิ่มทุน) — จำหลักนี้ไว้ใช้ได้กับทุกบัญชี"}
+];
+
+const wrongByCat = {}, totalByCat = {};
+Q.forEach(item=>{ totalByCat[item.cat] = (totalByCat[item.cat]||0)+1; });
+
+let score=0, answered=new Array(Q.length).fill(false);
+const quizEl=document.getElementById('quiz');
+const scoreNowEl=document.getElementById('scoreNow');
+const scoreTotEl=document.getElementById('scoreTot');
+const pfill=document.getElementById('pfill');
+scoreTotEl.textContent=Q.length;
+
+function render(){
+  quizEl.innerHTML='';
+  Q.forEach((item,i)=>{
+    const card=document.createElement('div');
+    card.className='qcard'; card.id='card'+i;
+    card.innerHTML=`
+      <div class="qmeta"><span class="tag">ข้อ ${i+1}/${Q.length}</span><span class="tag" style="background:#2f7fd1">${item.cat}</span></div>
+      <div class="qtext">${item.q}</div>
+      <div class="opts" id="opts${i}"></div>
+      <div class="result-badge" id="badge${i}"></div>
+      <div class="explain" id="ex${i}"><b>คำอธิบาย:</b> ${item.ex}</div>
+    `;
+    quizEl.appendChild(card);
+    const optsWrap=card.querySelector('#opts'+i);
+    item.o.forEach((optText,oi)=>{
+      const btn=document.createElement('button');
+      btn.className='opt';
+      btn.textContent=String.fromCharCode(65+oi)+'. '+optText;
+      btn.onclick=()=>select(i,oi);
+      optsWrap.appendChild(btn);
+    });
+  });
+  renderFinal();
+}
+
+function select(qi,oi){
+  if(answered[qi]) return;
+  answered[qi]=true;
+  const item=Q[qi];
+  const buttons=document.querySelectorAll('#opts'+qi+' .opt');
+  buttons.forEach((b,bi)=>{
+    b.classList.add('disabled');
+    if(bi===item.a) b.classList.add('correct');
+    else if(bi===oi) b.classList.add('wrong');
+    else b.classList.add('faded');
+  });
+  document.getElementById('ex'+qi).classList.add('show');
+  const badge=document.getElementById('badge'+qi);
+  if(oi===item.a){ score++; badge.textContent='✓ ถูกต้อง'; badge.className='result-badge ok'; }
+  else {
+    wrongByCat[item.cat] = (wrongByCat[item.cat]||0)+1;
+    badge.textContent='✗ ไม่ถูกต้อง — เฉลยคือข้อ '+String.fromCharCode(65+item.a);
+    badge.className='result-badge no';
+  }
+  scoreNowEl.textContent=score;
+  const doneCount=answered.filter(Boolean).length;
+  pfill.style.width=(doneCount/Q.length*100)+'%';
+  renderFinal();
+}
+
+function renderFinal(){
+  const finalArea=document.getElementById('finalArea');
+  const doneCount=answered.filter(Boolean).length;
+  if(doneCount<Q.length){ finalArea.innerHTML=''; return; }
+  const pct=Math.round(score/Q.length*100);
+  let msg = pct>=80?'ยอดเยี่ยม พร้อมสอบมิดเทอมแล้ว!' : pct>=60?'ใช้ได้ ทบทวนจุดที่พลาดอีกนิด' : 'ควรทบทวนเนื้อหาเพิ่มเติมก่อนสอบ';
+
+  const cats = Object.keys(totalByCat).map(c=>({
+    cat:c, wrong: wrongByCat[c]||0, total: totalByCat[c]
+  })).filter(c=>c.wrong>0).sort((a,b)=>b.wrong-a.wrong || (b.wrong/b.total)-(a.wrong/a.total));
+
+  let catHtml = '';
+  if(cats.length===0){
+    catHtml = `<div class="catbox"><h3>สรุปตามหมวด</h3><p style="color:var(--sub);font-size:.85rem;margin:0;">ทำถูกทุกข้อทุกหมวด เยี่ยมมากครับ 🎉</p></div>`;
+  } else {
+    const rows = cats.slice(0,8).map((c,i)=>{
+      const rate = Math.round(c.wrong/c.total*100);
+      return `<div class="catrow ${i===0?'worst':''}">
+        <span class="name">${i===0?'⚠️ ':''}${c.cat}</span>
+        <span style="display:flex;align-items:center;">
+          <span class="stat">ผิด ${c.wrong}/${c.total}</span>
+          <span class="barwrap"><span class="barfill" style="width:${rate}%"></span></span>
+        </span>
+      </div>`;
+    }).join('');
+    catHtml = `<div class="catbox"><h3>สรุปหมวดที่ผิดบ่อย (เรียงจากมากไปน้อย)</h3>${rows}
+      <p style="color:var(--sub);font-size:.8rem;margin:10px 0 0;">แนะนำให้กลับไปทบทวนหมวดที่มีเครื่องหมาย ⚠️ ก่อนเป็นอันดับแรก</p></div>`;
+  }
+
+  finalArea.innerHTML=`
+    <div class="finalbox">
+      <div class="big">${score} / ${Q.length}</div>
+      <p>คิดเป็น ${pct}% — ${msg}</p>
+      <button class="act" onclick="resetQuiz()">ทำแบบทดสอบใหม่</button>
+      ${catHtml}
+    </div>`;
+}
+
+function resetQuiz(){
+  score=0; answered=new Array(Q.length).fill(false);
+  Object.keys(wrongByCat).forEach(k=>delete wrongByCat[k]);
+  scoreNowEl.textContent=0; pfill.style.width='0%';
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+render();
+</script>
+</body>
+</html>
